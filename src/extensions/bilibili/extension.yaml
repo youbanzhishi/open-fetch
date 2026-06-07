@@ -1,0 +1,101 @@
+# Bilibili 扩展
+# B站视频/直播/弹幕/封面下载
+
+name: bilibili
+version: 1.0.0
+description: "B站视频/直播/弹幕/封面下载"
+
+# AI Manifest - 核心创新
+ai_manifest:
+  description: "下载B站视频和直播，支持批量、弹幕、封面提取、字幕下载"
+  
+  keywords:
+    - "b站"
+    - "bilibili"
+    - "BV号"
+    - "av号"
+    - "弹幕"
+    - "直播"
+    - "小黄车"
+    - "充电"
+  
+  examples:
+    - "下载这个B站视频 https://bilibili.com/video/BVxxx"
+    - "下载这个视频的弹幕"
+    - "下载这个UP主的全部视频"
+    - "录制这个B站直播间"
+    - "下载视频封面"
+  
+  intent_patterns:
+    - "下载*b站视频"
+    - "下载*bilibili"
+    - "*BV号*下载"
+    - "*弹幕*"
+    - "*直播*录制"
+
+# 平台匹配
+platforms:
+  - "bilibili.com"
+  - "www.bilibili.com"
+  - "live.bilibili.com"
+  - "m.bilibili.com"
+
+# 能力
+capabilities:
+  - video_download
+  - live_record
+  - danmu_export
+  - cover_extract
+  - subtitle_download
+  - batch_download
+
+# 输入输出
+input_schema:
+  type: object
+  properties:
+    url:
+      type: string
+      required: true
+      description: "B站视频链接（BV号或完整URL）"
+    quality:
+      type: string
+      enum: ["360p", "480p", "720p", "1080p", "1080p+", "4k"]
+      default: "1080p"
+      description: "视频画质"
+    download_danmu:
+      type: boolean
+      default: false
+      description: "是否下载弹幕"
+    download_cover:
+      type: boolean
+      default: false
+      description: "是否下载封面"
+    download_subtitle:
+      type: boolean
+      default: false
+      description: "是否下载字幕"
+
+output_schema:
+  type: object
+  properties:
+    title:
+      type: string
+      description: "视频标题"
+    files:
+      type: array
+      items:
+        type: object
+        properties:
+          url: { type: string }
+          filename: { type: string }
+          size: { type: integer }
+          format: { type: string }
+    danmu:
+      type: array
+      description: "弹幕文件列表"
+    cover:
+      type: string
+      description: "封面URL"
+    subtitles:
+      type: array
+      description: "字幕文件列表"

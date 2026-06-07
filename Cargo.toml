@@ -1,0 +1,61 @@
+[package]
+name = "open-fetch"
+version = "0.1.0"
+edition = "2021"
+description = "OpenFetch - 史无前例的全能内容获取平台"
+authors = ["@小龙"]
+license = "MIT"
+repository = "https://github.com/youbanzhishi/open-fetch"
+keywords = ["downloader", "fetcher", "content", "video", "audio", "ai"]
+rust-version = "1.70"
+
+[dependencies]
+# CLI
+clap = { version = "4.4", features = ["derive", "env"] }
+anyhow = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# 异步
+tokio = { version = "1", features = ["full"] }
+
+# 网络
+reqwest = { version = "0.11", features = ["json", "stream"] }
+url = "2.5"
+
+# 文件
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+dirs = "5.0"
+
+# 扩展
+glob = "0.3"
+notify = "6.1"
+
+# 跨端同步
+rusqlite = { version = "0.30", features = ["bundled"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# 压缩
+image = "0.24"
+mp3-duration = "0.1"
+
+# 工具
+sha2 = "0.10"
+hex = "0.4"
+futures = "0.3"
+async-trait = "0.1"
+
+[dev-dependencies]
+tempfile = "3.8"
+
+[[bin]]
+name = "open-fetch"
+path = "src/main.rs"
+
+[lib]
+name = "open_fetch"
+path = "src/lib.rs"
