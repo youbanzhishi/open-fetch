@@ -155,8 +155,8 @@ async fn download(url: &str, ext: Option<&str>, output: &str) -> Result<()> {
     println!("🎬 开始下载: {}", url);
     
     // 加载配置和引擎
-    let config = open_fetch::Config::default();
-    let engine = open_fetch::Engine::new(config).await?;
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
     
     // 创建任务
     let task = engine.create_task(url, ext).await?;
@@ -170,8 +170,8 @@ async fn download(url: &str, ext: Option<&str>, output: &str) -> Result<()> {
 }
 
 async fn handle_ext(subcommand: ExtCommands) -> Result<()> {
-    let config = open_fetch::Config::default();
-    let engine = open_fetch::Engine::new(config).await?;
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
     
     match subcommand {
         ExtCommands::List => {
@@ -208,8 +208,8 @@ async fn handle_ext(subcommand: ExtCommands) -> Result<()> {
 async fn ai_download(query: &str) -> Result<()> {
     println!("🤖 AI 理解: {}", query);
     
-    let config = open_fetch::Config::default();
-    let engine = open_fetch::Engine::new(config).await?;
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
     
     // AI 匹配扩展
     let ext_name = engine.match_intent(query).await;
@@ -232,16 +232,16 @@ async fn ai_download(query: &str) -> Result<()> {
 }
 
 async fn handle_task(subcommand: TaskCommands) -> Result<()> {
-    let config = open_fetch::Config::default();
-    let engine = open_fetch::Engine::new(config).await?;
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
     
     match subcommand {
         TaskCommands::List { status } => {
             let status_filter = status.map(|s| match s {
-                TaskStatusArg::Pending => open_fetch::TaskStatus::Pending,
-                TaskStatusArg::Downloading => open_fetch::TaskStatus::Downloading,
-                TaskStatusArg::Completed => open_fetch::TaskStatus::Completed,
-                TaskStatusArg::Failed => open_fetch::TaskStatus::Failed,
+                TaskStatusArg::Pending => crate::TaskStatus::Pending,
+                TaskStatusArg::Downloading => crate::TaskStatus::Downloading,
+                TaskStatusArg::Completed => crate::TaskStatus::Completed,
+                TaskStatusArg::Failed => crate::TaskStatus::Failed,
             });
             
             let tasks = engine.list_tasks(status_filter).await?;
@@ -274,8 +274,8 @@ async fn handle_task(subcommand: TaskCommands) -> Result<()> {
 }
 
 async fn handle_sync(pull: bool, push: bool) -> Result<()> {
-    let config = open_fetch::Config::default();
-    let engine = open_fetch::Engine::new(config).await?;
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
     
     if pull {
         println!("☁️ 从云端同步...");

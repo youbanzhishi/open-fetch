@@ -6,7 +6,7 @@ use anyhow::Result;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use crate::extension::{Extension, ExtensionRegistry, ExtensionManifest};
+use crate::extension::{ExtensionRegistry, ExtensionManifest};
 use crate::sync::{SyncManager, Task, TaskStatus};
 use crate::utils::error::OpenFetchError;
 
@@ -89,9 +89,11 @@ impl Engine {
     
     /// 创建下载任务
     pub async fn create_task(&self, url: &str, ext_name: Option<&str>) -> Result<Task> {
-        let ext_name = ext_name
-            .map(String::from)
-            .or_else(|| self.match_intent(url));
+        let ext_name = if let Some(name) = ext_name {
+            Some(name.to_string())
+        } else {
+            self.match_intent(url).await
+        };
         
         let task = Task::new(url, ext_name)?;
         
@@ -120,7 +122,7 @@ impl Engine {
         
         // 执行下载
         self.sync.update_task_status(task_id, TaskStatus::Downloading).await?;
-        extension.download(&task.url, &self.config.download_dir).await?;
+        extension.as_ref().download(&task.url, &self.config.download_dir).await?;
         self.sync.update_task_status(task_id, TaskStatus::Completed).await?;
         
         // 同步状态到云端
