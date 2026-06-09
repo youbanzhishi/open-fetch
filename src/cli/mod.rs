@@ -19,6 +19,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// 启动HTTP API服务器（浏览器插件通信）
+    Server {
+        /// 监听端口
+        #[arg(short, long, default_value = "8080")]
+        port: u16,
+    },
+    
     /// 下载资源
     Download {
         /// 资源URL
@@ -131,6 +138,9 @@ pub async fn run() -> Result<()> {
     }
     
     match cli.command {
+        Commands::Server { port } => {
+            start_server(port).await?;
+        }
         Commands::Download { url, ext, output } => {
             download(&url, ext.as_deref(), &output).await?;
         }
@@ -151,7 +161,7 @@ pub async fn run() -> Result<()> {
     Ok(())
 }
 
-async fn download(url: &str, ext: Option<&str>, output: &str) -> Result<()> {
+async fn download(url: &str, ext: Option<&str>, _output: &str) -> Result<()> {
     println!("🎬 开始下载: {}", url);
     
     // 加载配置和引擎
@@ -294,6 +304,28 @@ async fn handle_sync(pull: bool, push: bool) -> Result<()> {
         println!("  本地任务: -");
         println!("  云端任务: -");
     }
+    
+    Ok(())
+}
+
+/// 启动HTTP API服务器
+async fn start_server(port: u16) -> Result<()> {
+    use std::sync::Arc;
+    use tokio::sync::RwLock;
+    
+    println!("🚀 启动 OpenFetch HTTP API 服务器...");
+    
+    // 初始化组件
+    let config = crate::Config::default();
+    let engine = crate::Engine::new(config).await?;
+    
+    // 创建应用状态（只传入registry，queue由AppState内部创建）
+    let state = Arc::new(crate::server::AppState::new(
+        engine.registry().clone(),
+    ));
+    
+    // 启动服务器
+    crate::server::start_server(state, port).await?;
     
     Ok(())
 }

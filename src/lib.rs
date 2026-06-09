@@ -11,6 +11,7 @@ pub mod extension;
 pub mod plugin;   // DAW风格四柱：API + Registry + Runtime + Hooks
 pub mod sync;
 pub mod cli;
+pub mod server;    // HTTP API 服务器（浏览器插件通信）
 pub mod utils;
 
 // 导出公共接口

@@ -1,0 +1,61 @@
+/* OpenFetch - 内容脚本样式 */
+
+.openfetch-floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    cursor: pointer;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 20px;
+}
+
+.openfetch-floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+}
+
+.openfetch-floating-btn.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.openfetch-toast {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: rgba(30, 30, 46, 0.95);
+    color: #e2e8f0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 999999;
+    animation: slideIn 0.3s ease;
+    border: 1px solid #3f3f5a;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.openfetch-toast.success {
+    border-color: #10b981;
+}
+
+.openfetch-toast.error {
+    border-color: #ef4444;
+}

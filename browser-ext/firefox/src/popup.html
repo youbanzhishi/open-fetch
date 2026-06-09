@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenFetch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #1e1e2e;
+            --bg-light: #2a2a3e;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #3f3f5a;
+        }
+        
+        body {
+            width: 320px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        .header {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .status-bar {
+            padding: 12px 16px;
+            background: var(--bg-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--danger);
+        }
+        
+        .status-dot.online {
+            background: var(--success);
+        }
+        
+        .content {
+            padding: 16px;
+        }
+        
+        .section {
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        
+        .info-label {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .platform-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--primary);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .btn-group .btn {
+            flex: 1;
+        }
+        
+        .queue-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .queue-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+        
+        .queue-icon {
+            font-size: 16px;
+        }
+        
+        .queue-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .queue-title {
+            font-size: 12px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .queue-status {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+        }
+        
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .settings-toggle {
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        .settings-panel {
+            display: none;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        
+        .settings-panel.show {
+            display: block;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: var(--border);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .toggle.active {
+            background: var(--primary);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        
+        .toggle.active::after {
+            transform: translateX(18px);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">⬇</div>
+        <div>
+            <div class="title">OpenFetch</div>
+            <div class="subtitle">全能下载助手</div>
+        </div>
+    </div>
+    
+    <div class="status-bar">
+        <div class="status-indicator">
+            <div class="status-dot" id="cliStatus"></div>
+            <span id="cliStatusText">检查中...</span>
+        </div>
+        <div id="queueCount">队列: 0</div>
+    </div>
+    
+    <div class="content">
+        <div class="section">
+            <div class="section-title">当前页面</div>
+            <div class="info-card" id="pageInfo">
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <div>正在检测...</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" id="downloadBtn" disabled>
+            ⬇ 添加到下载队列
+        </button>
+        
+        <div class="btn-group">
+            <button class="btn btn-secondary" id="openCliBtn">
+                🖥 打开桌面端
+            </button>
+            <button class="btn btn-secondary" id="settingsBtn">
+                ⚙ 设置
+            </button>
+        </div>
+        
+        <div class="settings-panel" id="settingsPanel">
+            <div class="setting-item">
+                <span>自动检测</span>
+                <div class="toggle active" id="autoDetectToggle"></div>
+            </div>
+            <div class="setting-item">
+                <span>下载通知</span>
+                <div class="toggle active" id="notifyToggle"></div>
+            </div>
+            <div class="setting-item">
+                <span>最大并发</span>
+                <select id="maxConcurrent" style="background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">下载队列</div>
+            <div class="queue-list" id="queueList">
+                <div class="empty-state">
+                    <div>暂无下载任务</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <span>v0.5.0</span>
+        <span class="settings-toggle" id="settingsLink">设置</span>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

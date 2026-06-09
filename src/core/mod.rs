@@ -152,6 +152,16 @@ impl Engine {
     pub async fn sync_from_cloud(&self) -> Result<Vec<Task>> {
         self.sync.sync_from_cloud().await
     }
+    
+    /// 获取扩展注册表
+    pub fn registry(&self) -> Arc<RwLock<ExtensionRegistry>> {
+        self.extensions.clone()
+    }
+    
+    /// 获取同步管理器
+    pub fn sync_manager(&self) -> Arc<SyncManager> {
+        self.sync.clone()
+    }
 }
 
 #[cfg(test)]
