@@ -1,0 +1,93 @@
+# 通用下载器扩展
+# 基于 yt-dlp，支持多平台下载
+
+name: universal
+version: 1.0.0
+description: "通用下载器 - 基于yt-dlp，支持YouTube/B站/抖音/微博等50+平台"
+
+# AI Manifest - 核心创新
+ai_manifest:
+  description: "通用多平台下载器，支持视频/音频/字幕，兼容50+主流平台"
+  
+  keywords:
+    - "youtube"
+    - "视频下载"
+    - "音频下载"
+    - "通用下载"
+    - "多平台"
+    - "yt-dlp"
+  
+  examples:
+    - "下载这个YouTube视频 https://youtube.com/watch?v=xxx"
+    - "下载这个视频的音频"
+    - "下载微博视频"
+    - "下载抖音视频"
+  
+  intent_patterns:
+    - "*YouTube*下载"
+    - "*youtube*下载"
+    - "*视频*下载*"
+    - "*音频*下载*"
+
+# 平台匹配
+platforms:
+  - "youtube.com"
+  - "youtu.be"
+  - "bilibili.com"
+  - "douyin.com"
+  - "weibo.com"
+  - "twitter.com"
+  - "instagram.com"
+  - "tiktok.com"
+  - "reddit.com"
+
+# 能力
+capabilities:
+  - video_download
+  - audio_download
+  - subtitle_download
+  - thumbnail_download
+  - playlist_download
+  - multi_quality
+
+# 输入输出
+input_schema:
+  type: object
+  properties:
+    url:
+      type: string
+      required: true
+      description: "资源URL"
+    action:
+      type: string
+      enum: ["resolve", "download"]
+      default: "resolve"
+      description: "执行动作"
+    quality:
+      type: string
+      enum: ["best", "1080p", "720p", "480p", "360p"]
+      default: "best"
+      description: "视频质量"
+    format:
+      type: string
+      default: "bestvideo+bestaudio/best"
+      description: "yt-dlp格式字符串"
+    output_dir:
+      type: string
+      description: "输出目录"
+
+output_schema:
+  type: object
+  properties:
+    title:
+      type: string
+      description: "资源标题"
+    platform:
+      type: string
+      description: "平台名称"
+    files:
+      type: array
+      description: "可用文件列表"
+    metadata:
+      type: object
+      description: "完整元信息"

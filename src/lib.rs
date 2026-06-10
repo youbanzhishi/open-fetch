@@ -9,6 +9,7 @@
 pub mod core;
 pub mod extension;
 pub mod plugin;   // DAW风格四柱：API + Registry + Runtime + Hooks
+pub mod runtime;   // Python 扩展运行时
 pub mod sync;
 pub mod cli;
 pub mod server;    // HTTP API 服务器（浏览器插件通信）

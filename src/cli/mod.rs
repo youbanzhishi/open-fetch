@@ -311,7 +311,6 @@ async fn handle_sync(pull: bool, push: bool) -> Result<()> {
 /// 启动HTTP API服务器
 async fn start_server(port: u16) -> Result<()> {
     use std::sync::Arc;
-    use tokio::sync::RwLock;
     
     println!("🚀 启动 OpenFetch HTTP API 服务器...");
     
