@@ -1,0 +1,62 @@
+id: youtube
+name: YouTube下载器
+version: 1.0.0
+description: YouTube视频/Shorts/音乐/直播下载，支持4K/HDR/8K，字幕/字幕组/会员视频
+author: OpenFetch Team
+platforms:
+  - video
+  - music
+  - live
+apis:
+  - method: download
+    description: 下载视频
+    params:
+      - name: url
+        type: string
+        required: true
+        description: YouTube视频URL
+      - name: quality
+        type: string
+        required: false
+        default: "best"
+        description: 画质(4320p/2160p/1440p/1080p/720p/480p/best)
+      - name: format
+        type: string
+        required: false
+        default: "mp4"
+        description: 格式(mp4/webm/mkv/best)
+      - name: audio_only
+        type: boolean
+        required: false
+        default: false
+        description: 仅音频(mp3/m4a/best)
+  - method: playlist
+    description: 下载播放列表
+    params:
+      - name: url
+        type: string
+        required: true
+        description: 播放列表URL
+      - name: start
+        type: integer
+        required: false
+        default: 1
+        description: 起始序号
+      - name: end
+        type: integer
+        required: false
+        description: 结束序号
+  - method: music
+    description: 下载音乐(仅音频)
+    params:
+      - name: url
+        type: string
+        required: true
+        description: 视频或音乐URL
+      - name: format
+        type: string
+        required: false
+        default: "mp3"
+        description: 音频格式(mp3/m4a/flac/best)
+ai_capable: true
+auto_describe: "YouTube下载专家，支持4K/8K视频、Shorts短视频、Music音乐、播放列表下载，自动下载字幕"

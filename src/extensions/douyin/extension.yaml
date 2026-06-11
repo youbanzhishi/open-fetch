@@ -1,0 +1,47 @@
+id: douyin
+name: 抖音/TikTok下载器
+version: 1.0.0
+description: 抖音/TikTok视频无水印下载，支持作者主页批量、评论采集
+author: OpenFetch Team
+platforms:
+  - video
+  - short_video
+apis:
+  - method: download
+    description: 下载单个视频
+    params:
+      - name: url
+        type: string
+        required: true
+        description: 抖音/TikTok视频URL或分享链接
+      - name: no_watermark
+        type: boolean
+        required: false
+        default: true
+        description: 去除水印
+  - method: author
+    description: 下载作者全部视频
+    params:
+      - name: sec_uid
+        type: string
+        required: true
+        description: 作者SEC_UID
+      - name: limit
+        type: integer
+        required: false
+        default: 20
+        description: 下载数量
+  - method: comments
+    description: 采集视频评论
+    params:
+      - name: url
+        type: string
+        required: true
+        description: 视频URL
+      - name: limit
+        type: integer
+        required: false
+        default: 100
+        description: 评论数量
+ai_capable: true
+auto_describe: "抖音和TikTok下载专家，支持无水印下载、作者批量下载、评论数据采集"

@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "OpenFetch 下载助手",
+  "version": "1.0.0",
+  "description": "全能下载工具 - 支持50+平台视频/音频/图片下载",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "*://*.bilibili.com/*",
+    "*://*.douyin.com/*",
+    "*://*.tiktok.com/*",
+    "*://*.youtube.com/*",
+    "*://*.weibo.com/*",
+    "*://*.ixigua.com/*",
+    "*://*.kuaishou.com/*",
+    "*://*.ksyun.com/*",
+    "*://*.live.bilibili.com/*",
+    "*://*.douyu.com/*",
+    "*://*.huya.com/*",
+    "*://*.twitch.tv/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
