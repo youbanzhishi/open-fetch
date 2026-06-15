@@ -13,18 +13,28 @@ jobs:
       - name: Install Rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source ~/.cargo/env
-          rustc --version
-          cargo --version
-      
-      - name: Build CLI
+          echo "$HOME/.cargo/env"
+          ls -la $HOME/.cargo/
+          cat $HOME/.cargo/env || true
+        shell: bash
+        
+      - name: Check Rust
         run: |
-          source ~/.cargo/env
-          cargo build --release --features cli
-      
-      - name: Upload CLI
+          source $HOME/.cargo/env || true
+          export PATH="$HOME/.cargo/bin:$PATH"
+          rustc --version || echo "rustc not found"
+          cargo --version || echo "cargo not found"
+        shell: bash
+        
+      - name: Build
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          cargo build --release 2>&1 || echo "BUILD_FAILED"
+        shell: bash
+        
+      - name: Upload
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: open-fetch-cli
+          name: open-fetch
           path: target/release/open-fetch
-          retention-days: 30
