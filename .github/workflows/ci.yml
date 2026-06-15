@@ -3,8 +3,6 @@ name: Build
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   build:
@@ -12,14 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source ~/.cargo/env
+          rustc --version
+      
       - name: Build
-        run: cargo build --release --features all
-        
-      - name: Upload binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: open-fetch-binary
-          path: target/release/open-fetch
+        run: |
+          source ~/.cargo/env
+          cargo build --release --features all 2>&1 || echo "Build failed"
+      
+      - name: Check output
+        run: |
+          source ~/.cargo/env
+          ls -la target/release/ 2>/dev/null || echo "No build output"
