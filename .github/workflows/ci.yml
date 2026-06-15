@@ -25,44 +25,23 @@ jobs:
         with:
           workspaces: target
         
-      - name: Show Cargo.toml
+      - name: Build
         run: |
+          echo "=== Rust Version ==="
+          rustc --version
+          cargo --version
+          echo ""
           echo "=== Cargo.toml ==="
           cat Cargo.toml
           echo ""
-          echo "=== src/main.rs ==="
-          head -20 src/main.rs
-          echo ""
-          echo "=== src/ structure ==="
-          find src/ -type f
-          
-      - name: Build
-        run: |
           echo "=== Building ==="
           cargo build --release 2>&1
           echo ""
-          echo "=== Check target/release ==="
-          ls -la target/release/ 2>/dev/null || echo "No target/release directory"
-          echo ""
-          echo "=== Check for binary ==="
-          find target/ -name "open-fetch*" -type f 2>/dev/null || echo "No binary found"
-          echo ""
-          echo "=== Cargo.lock check ==="
-          if [ -f Cargo.lock ]; then
-            echo "Cargo.lock exists"
-          else
-            echo "WARNING: Cargo.lock not found - dependencies may not be locked"
-          fi
-          
-      - name: Check
-        run: |
-          echo "=== Final Check ==="
+          echo "=== Build result ==="
           if [ -f target/release/open-fetch ]; then
-            echo "✅ BUILD SUCCESS"
+            echo "SUCCESS: Binary found"
             ls -lh target/release/open-fetch
           else
-            echo "❌ BUILD FAILED - binary not found"
-            # Try cargo build again with verbose
-            cargo build --release -vv 2>&1 | tail -50
+            echo "FAILED: Binary not found"
             exit 1
           fi
