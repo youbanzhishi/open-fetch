@@ -15,13 +15,16 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           source ~/.cargo/env
           rustc --version
+          cargo --version
       
       - name: Build
         run: |
           source ~/.cargo/env
-          cargo build --release --features all 2>&1 || echo "Build failed"
+          cargo build --release --features all
       
-      - name: Check output
-        run: |
-          source ~/.cargo/env
-          ls -la target/release/ 2>/dev/null || echo "No build output"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-linux
+          path: target/release/open-fetch
+          retention-days: 3
