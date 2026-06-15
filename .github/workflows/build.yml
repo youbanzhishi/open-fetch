@@ -1,0 +1,110 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # 1. CLI版本
+  build-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+      
+      - name: Build CLI
+        run: cargo build --release --features cli
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-cli
+          path: target/release/open-fetch
+          retention-days: 7
+
+  # 2. 完整版本（含cloud）
+  build-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+      
+      - name: Build All Features
+        run: cargo build --release --features all
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-all
+          path: target/release/open-fetch
+          retention-days: 7
+
+  # 3. 测试
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+      
+      - name: Run tests
+        run: cargo test --all-features
+
+  # 4. 发布Release
+  release:
+    needs: [build-cli, build-all, test]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download CLI artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: open-fetch-cli
+          path: dist/cli
+      
+      - name: Download All artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: open-fetch-all
+          path: dist/all
+      
+      - name: Make executable
+        run: |
+          chmod +x dist/cli/open-fetch
+          chmod +x dist/all/open-fetch
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/cli/open-fetch
+            dist/all/open-fetch
+          body: |
+            ## OpenFetch v${{ github.ref_name }}
+            
+            ### 下载说明
+            - `cli/open-fetch` - 命令行版本（默认功能）
+            - `all/open-fetch` - 完整版本（含GUI+云服务）
+            
+            ### 使用方式
+            ```bash
+            # CLI
+            ./open-fetch download "url"
+            
+            # 云端服务
+            ./open-fetch cloud --port 3000
+            ```
