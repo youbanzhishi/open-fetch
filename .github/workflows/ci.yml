@@ -19,7 +19,7 @@ jobs:
       - name: Setup Rust
         uses: actions/setup-rust@v1
         with:
-          rust stable
+          rust: stable
           components: rustfmt, clippy
       
       - name: Cache cargo
