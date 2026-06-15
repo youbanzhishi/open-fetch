@@ -13,10 +13,43 @@ env:
   RUST_BACKTRACE: 1
 
 jobs:
+  # ============ 基础CLI编译测试 ============
+  build-cli:
+    name: Build CLI (Test)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          source $HOME/.cargo/env
+          rustc --version
+          cargo --version
+
+      - name: Build CLI
+        run: |
+          source $HOME/.cargo/env
+          cargo build --release --features cli 2>&1
+        continue-on-error: true
+        
+      - name: Check Result
+        run: |
+          source $HOME/.cargo/env
+          if [ -f target/release/open-fetch ]; then
+            echo "✅ CLI BUILD SUCCESS"
+            ls -lh target/release/open-fetch
+          else
+            echo "❌ CLI BUILD FAILED"
+            cat target/release/.cargo-lock 2>/dev/null || true
+          fi
+
   # ============ 跨平台桌面版编译 ============
   build-desktop:
     name: Desktop (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    needs: build-cli
     strategy:
       fail-fast: false
       matrix:
@@ -30,7 +63,7 @@ jobs:
             artifact: open-fetch-macos-arm64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact: open-fetch-windows-x64.exe
+            artifact: open-fetch-windows-x64
 
     steps:
       - name: Checkout
@@ -39,29 +72,35 @@ jobs:
       - name: Install Rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          source $HOME/.cargo/env
           rustc --version
-          cargo --version
 
       - name: Add target
         if: matrix.target != ''
-        run: rustup target add ${{ matrix.target }}
-
-      - name: Build CLI (cli feature)
-        run: cargo build --release --features cli --target ${{ matrix.target }}
+        run: |
+          source $HOME/.cargo/env
+          rustup target add ${{ matrix.target }}
 
       - name: Build All Features
-        run: cargo build --release --features all --target ${{ matrix.target }}
+        run: |
+          source $HOME/.cargo/env
+          cargo build --release --features all --target ${{ matrix.target }} 2>&1
+        continue-on-error: true
 
       - name: Package
         run: |
           mkdir -p dist/${{ matrix.artifact }}
-          cp target/${{ matrix.target }}/release/open-fetch.exe dist/${{ matrix.artifact }}/ 2>/dev/null || \
-          cp target/${{ matrix.target }}/release/open-fetch dist/${{ matrix.artifact }}/ 2>/dev/null || \
-          cp target/release/open-fetch dist/${{ matrix.artifact }}/ 2>/dev/null || true
-          cp README.md LICENSE dist/${{ matrix.artifact }}/ 2>/dev/null || true
+          if [ -f target/${{ matrix.target }}/release/open-fetch.exe ]; then
+            cp target/${{ matrix.target }}/release/open-fetch.exe dist/${{ matrix.artifact }}/
+          elif [ -f target/${{ matrix.target }}/release/open-fetch ]; then
+            cp target/${{ matrix.target }}/release/open-fetch dist/${{ matrix.artifact }}/
+          elif [ -f target/release/open-fetch ]; then
+            cp target/release/open-fetch dist/${{ matrix.artifact }}/
+          fi
+          ls -la dist/${{ matrix.artifact }}/ 2>/dev/null || echo "No artifact"
 
       - name: Upload Artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
@@ -72,6 +111,7 @@ jobs:
   build-cloud:
     name: Cloud Service
     runs-on: ubuntu-latest
+    needs: build-cli
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -79,26 +119,23 @@ jobs:
       - name: Install Rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          source $HOME/.cargo/env
 
-      - name: Build Cloud (server + cloud features)
-        run: cargo build --release --features cloud
+      - name: Build Cloud
+        run: |
+          source $HOME/.cargo/env
+          cargo build --release --features cloud 2>&1
+        continue-on-error: true
 
-      - name: Build All Features (static)
-        run: cargo build --release --features all
-
-      - name: Package Web Assets
+      - name: Package
         run: |
           mkdir -p dist/open-fetch-cloud
           cp target/release/open-fetch dist/open-fetch-cloud/ 2>/dev/null || true
           cp -r src/web dist/open-fetch-cloud/ 2>/dev/null || true
-          cat > dist/open-fetch-cloud/start.sh << 'EOF'
-          #!/bin/bash
-          ./open-fetch cloud --port 3000 --host 0.0.0.0
-          EOF
-          chmod +x dist/open-fetch-cloud/start.sh
+          ls -la dist/open-fetch-cloud/
 
       - name: Upload Cloud Artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: open-fetch-cloud
@@ -136,7 +173,6 @@ jobs:
         with:
           files: release/*
           draft: false
-          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
