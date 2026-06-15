@@ -12,99 +12,179 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  # 1. CLI版本
-  build-cli:
+  # ========== Linux ==========
+  build-linux:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant: [cli, all]
     steps:
       - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-action@stable
       
-      - name: Build CLI
-        run: cargo build --release --features cli
+      - name: Build Linux
+        run: |
+          if [ "${{ matrix.variant }}" = "cli" ]; then
+            cargo build --release --features cli
+          else
+            cargo build --release --features all
+          fi
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: open-fetch-cli
+          name: open-fetch-linux-${{ matrix.variant }}
           path: target/release/open-fetch
           retention-days: 7
 
-  # 2. 完整版本（含cloud）
-  build-all:
-    runs-on: ubuntu-latest
+  # ========== Windows ==========
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        variant: [cli, all]
     steps:
       - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-action@stable
       
-      - name: Build All Features
-        run: cargo build --release --features all
+      - name: Build Windows
+        shell: bash
+        run: |
+          if [ "${{ matrix.variant }}" = "cli" ]; then
+            cargo build --release --features cli
+          else
+            cargo build --release --features all
+          fi
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: open-fetch-all
+          name: open-fetch-windows-${{ matrix.variant }}
+          path: target/release/open-fetch.exe
+          retention-days: 7
+
+  # ========== macOS ==========
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        variant: [cli, all]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+      
+      - name: Build macOS
+        run: |
+          if [ "${{ matrix.variant }}" = "cli" ]; then
+            cargo build --release --features cli
+          else
+            cargo build --release --features all
+          fi
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-macos-${{ matrix.variant }}
           path: target/release/open-fetch
           retention-days: 7
 
-  # 3. 测试
+  # ========== 测试 ==========
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Install Rust
         uses: dtolnay/rust-action@stable
-      
       - name: Run tests
         run: cargo test --all-features
 
-  # 4. 发布Release
+  # ========== 打包发布 ==========
   release:
-    needs: [build-cli, build-all, test]
+    needs: [build-linux-cli, build-linux-all, build-windows-cli, build-windows-all, build-macos-cli, build-macos-all, test]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
       
-      - name: Download CLI artifact
+      # 下载所有产物
+      - name: Download Linux CLI
         uses: actions/download-artifact@v4
-        with:
-          name: open-fetch-cli
-          path: dist/cli
-      
-      - name: Download All artifact
+        with: { name: open-fetch-linux-cli, path: dist/linux/cli }
+      - name: Download Linux ALL
         uses: actions/download-artifact@v4
-        with:
-          name: open-fetch-all
-          path: dist/all
+        with: { name: open-fetch-linux-all, path: dist/linux/all }
+      - name: Download Windows CLI
+        uses: actions/download-artifact@v4
+        with: { name: open-fetch-windows-cli, path: dist/windows/cli }
+      - name: Download Windows ALL
+        uses: actions/download-artifact@v4
+        with: { name: open-fetch-windows-all, path: dist/windows/all }
+      - name: Download macOS CLI
+        uses: actions/download-artifact@v4
+        with: { name: open-fetch-macos-cli, path: dist/macos/cli }
+      - name: Download macOS ALL
+        uses: actions/download-artifact@v4
+        with: { name: open-fetch-macos-all, path: dist/macos/all }
       
-      - name: Make executable
+      - name: Set execute permission
+        shell: bash
         run: |
-          chmod +x dist/cli/open-fetch
-          chmod +x dist/all/open-fetch
+          chmod +x dist/linux/*/open-fetch
+          chmod +x dist/macos/*/open-fetch
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/cli/open-fetch
-            dist/all/open-fetch
+            dist/linux/cli/open-fetch
+            dist/linux/all/open-fetch
+            dist/windows/cli/open-fetch.exe
+            dist/windows/all/open-fetch.exe
+            dist/macos/cli/open-fetch
+            dist/macos/all/open-fetch
+            src/web/*.html
           body: |
             ## OpenFetch v${{ github.ref_name }}
             
-            ### 下载说明
-            - `cli/open-fetch` - 命令行版本（默认功能）
-            - `all/open-fetch` - 完整版本（含GUI+云服务）
+            ### 📦 跨平台编译产物
+            
+            | 平台 | CLI版本 | 完整版本(含GUI+云服务) |
+            |------|---------|----------------------|
+            | 🐧 Linux | [下载](dist/linux/cli/open-fetch) | [下载](dist/linux/all/open-fetch) |
+            | 🪟 Windows | [下载](dist/windows/cli/open-fetch.exe) | [下载](dist/windows/all/open-fetch.exe) |
+            | 🍎 macOS | [下载](dist/macos/cli/open-fetch) | [下载](dist/macos/all/open-fetch) |
             
             ### 使用方式
-            ```bash
-            # CLI
-            ./open-fetch download "url"
             
+            **Linux/macOS:**
+            ```bash
+            chmod +x open-fetch
+            # CLI模式
+            ./open-fetch download "url"
             # 云端服务
             ./open-fetch cloud --port 3000
+            # GUI桌面
+            ./open-fetch gui
             ```
+            
+            **Windows:**
+            ```powershell
+            # CLI模式
+            .\open-fetch.exe download "url"
+            # 云端服务
+            .\open-fetch.exe cloud --port 3000
+            ```
+            
+            ### 🌐 Web UI
+            
+            云端服务启动后访问 http://localhost:3000/
+            
+            ### 更新内容
+            - 完整版本包含: CLI + GUI桌面应用 + 云端Web服务
+            - CLI版本仅包含命令行功能
