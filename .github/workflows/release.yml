@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux, windows, macos]
+        include:
+          - platform: linux
+            runs-on: ubuntu-latest
+          - platform: windows
+            runs-on: windows-latest
+          - platform: macos
+            runs-on: macos-latest
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Build
+        run: cargo build --release --features all
+        
+      - name: Rename binary
+        shell: bash
+        run: |
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            mv target/release/open-fetch.exe target/release/open-fetch-${{ matrix.platform }}.exe
+          else
+            mv target/release/open-fetch target/release/open-fetch-${{ matrix.platform }}
+          fi
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-${{ matrix.platform }}
+          path: target/release/open-fetch-${{ matrix.platform }}*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download all
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+      
+      - name: Set execute
+        shell: bash
+        run: chmod +x dist/*/open-fetch-* 2>/dev/null || true
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*/open-fetch-*
+            src/web/*.html
