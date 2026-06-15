@@ -8,49 +8,48 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: full
 
 jobs:
-  # ============ 基础编译测试 ============
-  build:
-    runs-on: ubuntu-latest
+  # ============ 跨平台编译 ============
+  build-all:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-        
+      
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: target
-        
+      
       - name: Build
         run: |
-          echo "=== Rust Version ==="
-          rustc --version
-          cargo --version
-          echo ""
-          echo "=== Cargo.toml ==="
-          cat Cargo.toml
-          echo ""
-          echo "=== Building ===" | tee build.log
-          cargo build --release 2>&1 | tee -a build.log
-          BUILD_EXIT=${PIPESTATUS[0]}
-          echo "" | tee -a build.log
-          echo "=== Cargo build exit code: $BUILD_EXIT ===" | tee -a build.log
-          echo "" | tee -a build.log
-          echo "=== target/release contents ===" | tee -a build.log
-          ls -la target/release/ 2>&1 | tee -a build.log || echo "No target/release" | tee -a build.log
-          echo "" | tee -a build.log
-          echo "=== Find all binaries ===" | tee -a build.log
-          find target/ -name "open-fetch*" -type f 2>&1 | tee -a build.log || echo "No binary found" | tee -a build.log
-          exit $BUILD_EXIT
+          cargo build --release
           
-      - name: Upload log
+      - name: Package
+        run: |
+          mkdir -p dist
+          # Windows .exe
+          if [ -f target/release/open-fetch.exe ]; then
+            cp target/release/open-fetch.exe dist/
+          fi
+          # Unix binary
+          if [ -f target/release/open-fetch ]; then
+            cp target/release/open-fetch dist/
+          fi
+          echo "=== Artifacts ==="
+          ls -lh dist/
+          
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: build-log
-          path: build.log
-          retention-days: 1
+          name: open-fetch-${{ matrix.os }}
+          path: dist/
+          retention-days: 7
