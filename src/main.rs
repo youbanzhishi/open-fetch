@@ -2,18 +2,27 @@
 //! 入口文件
 
 mod cli;
-mod cloud;
+#[cfg(feature = "core")]
 mod core;
+#[cfg(feature = "core")]
 mod extension;
+#[cfg(feature = "core")]
 mod extensions;
+#[cfg(feature = "gui")]
 mod gui;
+#[cfg(feature = "core")]
 mod plugin;
+#[cfg(feature = "core")]
 mod runtime;
+#[cfg(feature = "server")]
 mod server;
+#[cfg(feature = "core")]
 mod sync;
 mod utils;
 
-use std::path::PathBuf;
+#[cfg(feature = "server")]
+mod cloud;
+
 use std::sync::{Arc, Mutex};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 

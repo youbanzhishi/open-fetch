@@ -13,13 +13,6 @@ categories = ["command-line-utilities", "multimedia"]
 # CLI
 clap = { version = "4", features = ["derive"] }
 
-# Web框架
-axum = "0.7"
-tokio = { version = "1", features = ["full"] }
-tower = "0.4"
-tower-http = { version = "0.5", features = ["cors", "fs"] }
-futures-util = "0.3"
-
 # Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -40,6 +33,16 @@ directories = "5"
 # HTTP client
 reqwest = { version = "0.12", features = ["json", "stream"] }
 
+# CLI专用依赖
+reqwest = { version = "0.12", default-features = false, features = ["json"] }
+
+# Server (可选)
+axum = { version = "0.7", optional = true }
+tokio = { version = "1", features = ["full"], optional = true }
+tower = { version = "0.4", optional = true }
+tower-http = { version = "0.5", features = ["cors", "fs"], optional = true }
+futures-util = { version = "0.3", optional = true }
+
 # GUI (可选)
 egui = { version = "0.28", optional = true }
 eframe = { version = "0.28", optional = true }
@@ -49,9 +52,10 @@ tempfile = "3"
 
 [features]
 default = ["cli"]
-cli = []
-server = ["axum", "tokio", "tower", "tower-http", "futures-util"]
-gui = ["egui", "eframe"]
+core = []
+cli = ["reqwest"]
+server = ["axum", "tokio", "tower", "tower-http", "futures-util", "reqwest"]
+gui = ["egui", "eframe", "reqwest"]
 cloud = ["server"]
 all = ["cli", "server", "gui"]
 
