@@ -1,11 +1,13 @@
 [package]
 name = "open-fetch"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 authors = ["youbanzhishi"]
-description = "OpenFetch - 开源全能下载器"
+description = "OpenFetch - 开源全能下载器 (支持B站/油管/抖音等全平台)"
 license = "MIT"
 repository = "https://github.com/youbanzhishi/open-fetch"
+keywords = ["downloader", "video", "bilibili", "youtube", "download"]
+categories = ["command-line-utilities", "multimedia"]
 
 [dependencies]
 # CLI
@@ -16,6 +18,7 @@ axum = "0.7"
 tokio = { version = "1", features = ["full"] }
 tower = "0.4"
 tower-http = { version = "0.5", features = ["cors", "fs"] }
+futures-util = "0.3"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
@@ -31,7 +34,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Utils
 chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1", features = ["v4"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 directories = "5"
 
 # HTTP client
@@ -41,11 +44,15 @@ reqwest = { version = "0.12", features = ["json", "stream"] }
 egui = { version = "0.28", optional = true }
 eframe = { version = "0.28", optional = true }
 
+[dev-dependencies]
+tempfile = "3"
+
 [features]
 default = ["cli"]
 cli = []
-server = ["axum", "tokio", "tower", "tower-http"]
+server = ["axum", "tokio", "tower", "tower-http", "futures-util"]
 gui = ["egui", "eframe"]
+cloud = ["server"]
 all = ["cli", "server", "gui"]
 
 [[bin]]

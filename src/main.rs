@@ -2,6 +2,7 @@
 //! 入口文件
 
 mod cli;
+mod cloud;
 mod core;
 mod extension;
 mod extensions;
@@ -12,12 +13,13 @@ mod server;
 mod sync;
 mod utils;
 
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[derive(clap::Parser, Debug)]
 #[command(name = "open-fetch")]
-#[command(version = "0.8.0")]
+#[command(version = "0.9.0")]
 #[command(about = "OpenFetch - 开源全能下载器", long_about = None)]
 enum Command {
     /// 启动GUI桌面应用
@@ -30,6 +32,22 @@ enum Command {
         /// 服务器端口
         #[arg(short, long, default_value_t = 8080)]
         port: u16,
+    },
+    
+    /// 启动云端服务（Web UI + API + WebSocket）
+    #[cfg(feature = "server")]
+    Cloud {
+        /// 服务端口
+        #[arg(short, long, default_value_t = 3000)]
+        port: u16,
+        
+        /// 下载目录
+        #[arg(short, long, default_value = "./downloads")]
+        download_dir: Option<String>,
+        
+        /// 绑定地址
+        #[arg(short, long, default_value = "0.0.0.0")]
+        host: String,
     },
     
     /// 下载视频
@@ -115,15 +133,26 @@ fn main() -> anyhow::Result<()> {
     match cmd {
         #[cfg(feature = "gui")]
         Command::Gui => {
-            println!("🖥️ 启动 OpenFetch GUI v0.8.0");
+            println!("🖥️ 启动 OpenFetch GUI v0.9.0");
             let state = Arc::new(Mutex::new(gui::app::AppState::default()));
             gui::run_gui(state);
         }
         
         #[cfg(feature = "server")]
         Command::Server { port } => {
+            println!("🚀 启动 HTTP API 服务器 v0.9.0");
             tokio::runtime::Runtime::new()?.block_on(async {
                 server::start_server(port).await;
+            });
+        }
+        
+        #[cfg(feature = "server")]
+        Command::Cloud { port, download_dir, host } => {
+            println!("☁️ 启动 OpenFetch Cloud v0.9.0");
+            let addr = format!("{}:{}", host, port).parse()?;
+            let dir = download_dir.unwrap_or_else(|| "./downloads".to_string());
+            tokio::runtime::Runtime::new()?.block_on(async {
+                cloud::start_cloud_server(addr, dir, port).await;
             });
         }
         
