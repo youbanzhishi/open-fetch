@@ -13,28 +13,26 @@ jobs:
       - name: Install Rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          echo "$HOME/.cargo/env"
-          ls -la $HOME/.cargo/
-          cat $HOME/.cargo/env || true
-        shell: bash
-        
-      - name: Check Rust
-        run: |
-          source $HOME/.cargo/env || true
-          export PATH="$HOME/.cargo/bin:$PATH"
-          rustc --version || echo "rustc not found"
-          cargo --version || echo "cargo not found"
+          source ~/.cargo/env
+          rustc --version
+          cargo --version
         shell: bash
         
       - name: Build
         run: |
-          export PATH="$HOME/.cargo/bin:$PATH"
-          cargo build --release 2>&1 || echo "BUILD_FAILED"
+          source ~/.cargo/env
+          cargo build --release
+        shell: bash
+        continue-on-error: true
+        
+      - name: Check build
+        run: |
+          ls -la target/release/open-fetch 2>/dev/null && echo "BUILD_SUCCESS" || echo "BUILD_FAILED"
         shell: bash
         
       - name: Upload
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: open-fetch
+          name: open-fetch-linux
           path: target/release/open-fetch
