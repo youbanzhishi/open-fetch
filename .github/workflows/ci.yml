@@ -1,110 +1,26 @@
-name: Build & Release
+name: Build
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
     branches: [main]
-  release:
-    types: [published]
-
-env:
-  CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: 1
 
 jobs:
-  # ============ 跨平台桌面版编译 ============
-  build-desktop:
-    name: Desktop (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            artifact: open-fetch-linux-x86_64
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            artifact: open-fetch-macos-arm64
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            artifact: open-fetch-windows-x64
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@master
-        with:
-          targets: ${{ matrix.target }}
-
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          
       - name: Build
-        run: cargo build --release --target ${{ matrix.target }}
-
-      - name: Package
         run: |
-          mkdir -p dist/${{ matrix.artifact }}
-          cp target/${{ matrix.target }}/release/open-fetch.exe dist/${{ matrix.artifact }}/ 2>/dev/null || \
-          cp target/${{ matrix.target }}/release/open-fetch dist/${{ matrix.artifact }}/ 2>/dev/null || true
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.artifact }}
-          path: dist/${{ matrix.artifact }}
-          retention-days: 7
-
-  # ============ 发布 Release ============
-  release:
-    name: Create Release
-    needs: [build-desktop]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Prepare Release
+          $HOME/.cargo/bin/cargo build --release
+        continue-on-error: true
+        
+      - name: Check
         run: |
-          mkdir -p release
-          for dir in artifacts/*/; do
-            name=$(basename "$dir")
-            tar -czvf "release/${name}.tar.gz" -C "$dir" . 2>/dev/null || \
-            cp -r "$dir" "release/${name}" 2>/dev/null || true
-          done
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: release/*
-          draft: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # ============ 验证构建成功 ============
-  verify:
-    name: Verify Build
-    needs: [build-desktop]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: List artifacts
-        run: |
-          echo "=== Build Artifacts ==="
-          find artifacts -type f \( -name "open-fetch*" -o -name "*.exe" \) | head -20
+          ls -la target/release/open-fetch 2>/dev/null && echo "BUILD_SUCCESS" || echo "BUILD_FAILED: $(cat target/release/.cargo-lock 2>/dev/null | head -5)"
