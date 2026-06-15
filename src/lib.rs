@@ -6,19 +6,30 @@
 //! - 多端同步: CLI/浏览器/Safari/Web/AI Agent 无缝切换
 //! - 插件系统: 参考DAW四柱架构（API/Registry/Runtime/Hooks）
 
+#[cfg(feature = "core")]
 pub mod core;
+#[cfg(feature = "core")]
 pub mod extension;
+#[cfg(feature = "core")]
 pub mod plugin;   // DAW风格四柱：API + Registry + Runtime + Hooks
+#[cfg(feature = "core")]
 pub mod runtime;   // Python 扩展运行时
+#[cfg(feature = "core")]
 pub mod sync;
+#[cfg(feature = "cli")]
 pub mod cli;
+#[cfg(feature = "server")]
 pub mod server;    // HTTP API 服务器（浏览器插件通信）
 pub mod utils;
 
 // 导出公共接口
+#[cfg(feature = "core")]
 pub use core::{Engine, Config};
+#[cfg(feature = "core")]
 pub use extension::{ExtInstance, ExtensionRegistry, ExtensionManifest, DownloadExtension};
+#[cfg(feature = "core")]
 pub use plugin::{Plugin, PluginManifest, PluginCapability, PluginRegistry, HookSystem, HookEvent};
+#[cfg(feature = "core")]
 pub use sync::{SyncManager, Task, TaskStatus};
 
 pub use utils::error::OpenFetchError;

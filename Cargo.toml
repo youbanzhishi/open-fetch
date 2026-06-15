@@ -29,6 +29,9 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 directories = "5"
+dirs = "5"
+glob = "0.3"
+serde_yaml = "0.9"
 
 # Utils
 url = { version = "2", features = ["serde"] }
@@ -37,6 +40,12 @@ walkdir = "2"
 
 # HTTP client
 reqwest = { version = "0.12", features = ["json", "stream", "rustls-tls"], default-features = false }
+
+# Database (sync feature)
+rusqlite = { version = "0.31", features = ["bundled"], optional = true }
+
+# Async
+async-trait = { version = "0.1", optional = true }
 
 # Server (可选)
 axum = { version = "0.7", optional = true }
@@ -54,10 +63,10 @@ tempfile = "3"
 
 [features]
 default = ["cli"]
-core = []
-cli = ["reqwest"]
-server = ["axum", "tokio", "tower", "tower-http", "futures-util", "reqwest"]
-gui = ["egui", "eframe", "reqwest"]
+core = ["rusqlite", "async-trait", "dirs", "glob", "serde_yaml", "walkdir"]
+cli = ["core", "reqwest"]
+server = ["core", "axum", "tokio", "tower", "tower-http", "futures-util", "reqwest"]
+gui = ["core", "egui", "eframe", "reqwest"]
 cloud = ["server"]
 all = ["cli", "server", "gui"]
 
