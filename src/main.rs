@@ -2,9 +2,8 @@
 //! 入口文件
 
 mod cli;
-mod utils;
 
-use clap::{Parser, Subcommand};
+use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[command(name = "open-fetch")]

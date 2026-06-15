@@ -28,34 +28,9 @@ uuid = { version = "1", features = ["v4", "serde"] }
 directories = "5"
 dirs = "5"
 
-# Server (optional)
-axum = { version = "0.7", optional = true }
-tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
-tower = { version = "0.4", optional = true }
-tower-http = { version = "0.5", features = ["cors", "fs"], optional = true }
-futures-util = { version = "0.3", optional = true }
-
-# GUI (optional)
-egui = { version = "0.28", optional = true }
-eframe = { version = "0.28", optional = true }
-
 [dev-dependencies]
 tempfile = "3"
-
-[features]
-default = ["cli"]
-cli = []
-server = ["axum", "tokio", "tower", "tower-http", "futures-util"]
-gui = ["egui", "eframe"]
-cloud = ["server"]
-all = ["cli", "server", "gui"]
 
 [[bin]]
 name = "open-fetch"
 path = "src/main.rs"
-
-[profile.release]
-opt-level = 3
-lto = true
-codegen-units = 1
-strip = true
