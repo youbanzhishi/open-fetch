@@ -10,73 +10,15 @@ keywords = ["downloader", "video", "bilibili", "youtube", "download"]
 categories = ["command-line-utilities", "multimedia"]
 
 [dependencies]
-# CLI
 clap = { version = "4", features = ["derive"] }
-
-# Serialization
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-
-# Error handling
-thiserror = "1"
 anyhow = "1"
-
-# Logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-
-# Utils
-chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1", features = ["v4", "serde"] }
-directories = "5"
-dirs = "5"
-glob = "0.3"
-serde_yaml = "0.9"
-
-# Utils
-url = { version = "2", features = ["serde"] }
-mime = "0.3"
-walkdir = "2"
-
-# HTTP client
-reqwest = { version = "0.12", features = ["json", "stream", "rustls-tls"], default-features = false }
-
-# Database (sync feature)
-rusqlite = { version = "0.31", features = ["bundled"], optional = true }
-
-# Async
-async-trait = { version = "0.1", optional = true }
-
-# Server (可选)
-axum = { version = "0.7", optional = true }
-tokio = { version = "1", features = ["full"], optional = true }
-tower = { version = "0.4", optional = true }
-tower-http = { version = "0.5", features = ["cors", "fs"], optional = true }
-futures-util = { version = "0.3", optional = true }
-
-# GUI (可选)
-egui = { version = "0.28", optional = true }
-eframe = { version = "0.28", optional = true }
-
-[dev-dependencies]
-tempfile = "3"
-
-[features]
-default = ["cli"]
-core = ["rusqlite", "async-trait", "dirs", "glob", "serde_yaml", "walkdir"]
-cli = ["core", "tokio/rt-multi-thread", "reqwest"]
-server = ["core", "axum", "tokio", "tower", "tower-http", "futures-util", "reqwest"]
-gui = ["core", "egui", "eframe", "reqwest"]
-cloud = ["server"]
-all = ["cli", "server", "gui"]
-
-[[bin]]
-name = "open-fetch"
-path = "src/main.rs"
-required-features = ["cli"]
 
 [profile.release]
 opt-level = 3
 lto = true
 codegen-units = 1
 strip = true
+
+[[bin]]
+name = "open-fetch"
+path = "src/main.rs"
