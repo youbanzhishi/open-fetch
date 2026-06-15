@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  linux:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,91 +14,61 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           source ~/.cargo/env
+          rustc --version
+          cargo --version
       - name: Build
         run: |
           source ~/.cargo/env
           cargo build --release --features all
-          mv target/release/open-fetch "open-fetch-linux"
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: open-fetch-linux
-          path: open-fetch-linux
-
-  windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          Invoke-Expression (Invoke-WebRequest -Uri https://sh.rustup.rs -UseBasicParsing).Content | Out-String -Stream | Where-Object { $_ -notmatch "^\s*$" } | ForEach-Object { if ($_ -match "continue|press ENTER") {} else { Invoke-Expression $_ } }
-      - name: Build
-        shell: bash
-        run: |
-          source ~/.cargo/env
-          cargo build --release --features all
-          mv target/release/open-fetch.exe "open-fetch-windows.exe"
-      - uses: actions/upload-artifact@v4
+          path: target/release/open-fetch
+          retention-days: 30
+      - name: Upload Web UI
+        uses: actions/upload-artifact@v4
         with:
-          name: open-fetch-windows
-          path: open-fetch-windows.exe
-
-  macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source ~/.cargo/env
-      - name: Build
-        run: |
-          source ~/.cargo/env
-          cargo build --release --features all
-          mv target/release/open-fetch "openfetch-macos"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: open-fetch-macos
-          path: openfetch-macos
-
+          name: web-ui
+          path: src/web/*.html
+          retention-days: 30
   release:
-    needs: [linux, windows, macos]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download artifacts
+      - name: Download binary
         uses: actions/download-artifact@v4
         with:
+          name: open-fetch-linux
           path: dist
-      - name: Prepare files
-        shell: bash
-        run: |
-          chmod +x dist/open-fetch-linux
-          chmod +x dist/openfetch-macos
-          mv dist/openfetch-macos dist/open-fetch-macos
+      - name: Download Web UI
+        uses: actions/download-artifact@v4
+        with:
+          name: web-ui
+          path: dist
+      - name: Set execute
+        run: chmod +x dist/open-fetch
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/open-fetch-linux
-            dist/open-fetch-windows.exe
-            dist/open-fetch-macos
-            src/web/*.html
+            dist/open-fetch
+            dist/*.html
           body: |
             ## OpenFetch ${{ github.ref_name }}
             
-            ### 📦 跨平台编译产物
+            ### 📦 Linux编译产物
+            - `open-fetch` - 可执行文件（含CLI+GUI+云服务）
             
-            | 平台 | 下载 |
-            |------|------|
-            | 🐧 Linux | [open-fetch-linux](dist/open-fetch-linux) |
-            | 🪟 Windows | [open-fetch-windows.exe](dist/open-fetch-windows.exe) |
-            | 🍎 macOS | [open-fetch-macos](dist/open-fetch-macos) |
-            
-            ### 🌐 Web UI
-            包含 index.html, tasks.html, settings.html
+            ### 🌐 Web UI文件
+            - `index.html` - 主界面
+            - `tasks.html` - 任务列表
+            - `settings.html` - 设置页面
             
             ### 使用方式
             ```bash
-            chmod +x open-fetch-linux
-            ./open-fetch-linux cloud --port 3000
+            chmod +x open-fetch
+            # 启动云端服务
+            ./open-fetch cloud --port 3000
             ```
