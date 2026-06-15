@@ -34,14 +34,23 @@ jobs:
           echo "=== Cargo.toml ==="
           cat Cargo.toml
           echo ""
-          echo "=== Building ==="
-          cargo build --release 2>&1
-          echo ""
-          echo "=== Build result ==="
-          if [ -f target/release/open-fetch ]; then
-            echo "SUCCESS: Binary found"
-            ls -lh target/release/open-fetch
-          else
-            echo "FAILED: Binary not found"
-            exit 1
-          fi
+          echo "=== Building ===" | tee build.log
+          cargo build --release 2>&1 | tee -a build.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          echo "" | tee -a build.log
+          echo "=== Cargo build exit code: $BUILD_EXIT ===" | tee -a build.log
+          echo "" | tee -a build.log
+          echo "=== target/release contents ===" | tee -a build.log
+          ls -la target/release/ 2>&1 | tee -a build.log || echo "No target/release" | tee -a build.log
+          echo "" | tee -a build.log
+          echo "=== Find all binaries ===" | tee -a build.log
+          find target/ -name "open-fetch*" -type f 2>&1 | tee -a build.log || echo "No binary found" | tee -a build.log
+          exit $BUILD_EXIT
+          
+      - name: Upload log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 1
