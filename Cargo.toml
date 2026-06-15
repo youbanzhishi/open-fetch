@@ -1,65 +1,60 @@
 [package]
 name = "open-fetch"
-version = "0.1.0"
+version = "0.8.0"
 edition = "2021"
-description = "OpenFetch - 史无前例的全能内容获取平台"
-authors = ["@小龙"]
+authors = ["youbanzhishi"]
+description = "OpenFetch - 开源全能下载器"
 license = "MIT"
 repository = "https://github.com/youbanzhishi/open-fetch"
-keywords = ["downloader", "fetcher", "content", "video", "audio", "ai"]
-rust-version = "1.70"
 
 [dependencies]
 # CLI
-clap = { version = "4.4", features = ["derive", "env"] }
-anyhow = "1.0"
-thiserror = "1.0"
+clap = { version = "4", features = ["derive"] }
+
+# Web框架
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "fs"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Error handling
+thiserror = "1"
+anyhow = "1"
+
+# Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
-# 异步
-tokio = { version = "1", features = ["full"] }
-
-# 网络
-reqwest = { version = "0.11", features = ["json", "stream"] }
-url = "2.5"
-
-# 文件
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-serde_yaml = "0.9"
-dirs = "5.0"
-
-# 扩展
-glob = "0.3"
-notify = "6.1"
-
-# 跨端同步
-rusqlite = { version = "0.30", features = ["bundled"] }
+# Utils
 chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1.6", features = ["v4", "serde"] }
+uuid = { version = "1", features = ["v4"] }
+directories = "5"
 
-# 压缩
-image = "0.24"
-mp3-duration = "0.1"
+# HTTP client
+reqwest = { version = "0.12", features = ["json", "stream"] }
 
-# HTTP Server
-axum = "0.7"
-tower-http = { version = "0.5", features = ["cors"] }
+# GUI (可选)
+egui = { version = "0.28", optional = true }
+eframe = { version = "0.28", optional = true }
 
-# 工具
-sha2 = "0.10"
-hex = "0.4"
-futures = "0.3"
-async-trait = "0.1"
-
-[dev-dependencies]
-tempfile = "3.8"
+[features]
+default = ["cli"]
+cli = []
+server = ["axum", "tokio", "tower", "tower-http"]
+gui = ["egui", "eframe"]
+all = ["cli", "server", "gui"]
 
 [[bin]]
 name = "open-fetch"
 path = "src/main.rs"
+required-features = ["cli"]
 
-[lib]
-name = "open_fetch"
-path = "src/lib.rs"
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
