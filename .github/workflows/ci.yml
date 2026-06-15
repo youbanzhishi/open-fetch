@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
 
 jobs:
   # ============ 基础编译测试 ============
@@ -26,7 +27,8 @@ jobs:
         
       - name: Build
         run: |
-          cargo build --release
+          cargo build --release 2>&1
+        continue-on-error: true
           
       - name: Check
         run: |
@@ -35,6 +37,9 @@ jobs:
             ls -lh target/release/open-fetch
           else
             echo "❌ BUILD FAILED"
+            # Show cargo output
+            cat ~/.cargo/.rustup/toolchains/*/lib/rustlib/src/rustc/ \
+              Cargo.lock target/.cargo-lock.json 2>/dev/null || true
             exit 1
           fi
 
@@ -59,7 +64,8 @@ jobs:
       
       - name: Build
         run: |
-          cargo build --release
+          cargo build --release 2>&1
+        continue-on-error: true
           
       - name: Package
         run: |
@@ -76,6 +82,7 @@ jobs:
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: open-fetch-${{ matrix.os }}
           path: dist/
