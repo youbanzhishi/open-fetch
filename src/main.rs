@@ -4,7 +4,6 @@
 mod cli;
 mod utils;
 
-// 简单的 Command 枚举（仅 CLI 功能）
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
@@ -20,6 +19,10 @@ enum Command {
         /// 下载器类型
         #[arg(short, long)]
         extractor: Option<String>,
+        
+        /// 画质
+        #[arg(short, long, default_value = "best")]
+        quality: String,
     },
     
     /// 列出支持的平台
@@ -30,8 +33,8 @@ fn main() -> anyhow::Result<()> {
     let cmd: Command = Command::parse();
     
     match cmd {
-        Command::Download { url, extractor } => {
-            cli::download::run_download(&url, extractor.as_deref())?;
+        Command::Download { url, extractor, quality } => {
+            cli::download::run_download(&url, extractor.as_deref(), &quality)?;
         }
         
         Command::List => {
