@@ -64,7 +64,7 @@ tempfile = "3"
 [features]
 default = ["cli"]
 core = ["rusqlite", "async-trait", "dirs", "glob", "serde_yaml", "walkdir"]
-cli = ["core", "reqwest"]
+cli = ["core", "tokio/rt-multi-thread", "reqwest"]
 server = ["core", "axum", "tokio", "tower", "tower-http", "futures-util", "reqwest"]
 gui = ["core", "egui", "eframe", "reqwest"]
 cloud = ["server"]
