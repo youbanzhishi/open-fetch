@@ -25,65 +25,44 @@ jobs:
         with:
           workspaces: target
         
+      - name: Show Cargo.toml
+        run: |
+          echo "=== Cargo.toml ==="
+          cat Cargo.toml
+          echo ""
+          echo "=== src/main.rs ==="
+          head -20 src/main.rs
+          echo ""
+          echo "=== src/ structure ==="
+          find src/ -type f
+          
       - name: Build
         run: |
+          echo "=== Building ==="
           cargo build --release 2>&1
-        continue-on-error: true
+          echo ""
+          echo "=== Check target/release ==="
+          ls -la target/release/ 2>/dev/null || echo "No target/release directory"
+          echo ""
+          echo "=== Check for binary ==="
+          find target/ -name "open-fetch*" -type f 2>/dev/null || echo "No binary found"
+          echo ""
+          echo "=== Cargo.lock check ==="
+          if [ -f Cargo.lock ]; then
+            echo "Cargo.lock exists"
+          else
+            echo "WARNING: Cargo.lock not found - dependencies may not be locked"
+          fi
           
       - name: Check
         run: |
+          echo "=== Final Check ==="
           if [ -f target/release/open-fetch ]; then
             echo "✅ BUILD SUCCESS"
             ls -lh target/release/open-fetch
           else
-            echo "❌ BUILD FAILED"
-            # Show cargo output
-            cat ~/.cargo/.rustup/toolchains/*/lib/rustlib/src/rustc/ \
-              Cargo.lock target/.cargo-lock.json 2>/dev/null || true
+            echo "❌ BUILD FAILED - binary not found"
+            # Try cargo build again with verbose
+            cargo build --release -vv 2>&1 | tail -50
             exit 1
           fi
-
-  # ============ 跨平台编译 ============
-  build-all:
-    name: Build (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Cache cargo
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: target
-      
-      - name: Build
-        run: |
-          cargo build --release 2>&1
-        continue-on-error: true
-          
-      - name: Package
-        run: |
-          mkdir -p dist
-          # Windows .exe
-          if [ -f target/release/open-fetch.exe ]; then
-            cp target/release/open-fetch.exe dist/
-          fi
-          # Unix binary
-          if [ -f target/release/open-fetch ]; then
-            cp target/release/open-fetch dist/
-          fi
-          ls -la dist/ || echo "No artifact"
-          
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: open-fetch-${{ matrix.os }}
-          path: dist/
-          retention-days: 7
