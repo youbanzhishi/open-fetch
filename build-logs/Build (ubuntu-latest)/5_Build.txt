@@ -1,0 +1,15 @@
+﻿2026-06-16T01:43:32.7733706Z ##[group]Run cargo build --release
+2026-06-16T01:43:32.7734047Z [36;1mcargo build --release[0m
+2026-06-16T01:43:32.7772387Z shell: /usr/bin/bash -e {0}
+2026-06-16T01:43:32.7772672Z env:
+2026-06-16T01:43:32.7772897Z   CARGO_TERM_COLOR: always
+2026-06-16T01:43:32.7773165Z   CARGO_HOME: /home/runner/.cargo
+2026-06-16T01:43:32.7773432Z   CARGO_INCREMENTAL: 0
+2026-06-16T01:43:32.7773667Z   CACHE_ON_FAILURE: false
+2026-06-16T01:43:32.7773900Z ##[endgroup]
+2026-06-16T01:43:32.8423076Z [1m[91merror[0m: failed to parse manifest at `/home/runner/work/open-fetch/open-fetch/Cargo.toml`
+2026-06-16T01:43:32.8423570Z 
+2026-06-16T01:43:32.8423666Z Caused by:
+2026-06-16T01:43:32.8424306Z   feature `server` includes `axum`, but `axum` is not an optional dependency
+2026-06-16T01:43:32.8425515Z   A non-optional dependency of the same name is defined; consider adding `optional = true` to its definition.
+2026-06-16T01:43:32.8449626Z ##[error]Process completed with exit code 101.

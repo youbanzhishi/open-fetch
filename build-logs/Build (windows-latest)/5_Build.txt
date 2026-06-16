@@ -1,0 +1,15 @@
+﻿2026-06-16T01:43:51.6945549Z ##[group]Run cargo build --release
+2026-06-16T01:43:51.6945930Z [36;1mcargo build --release[0m
+2026-06-16T01:43:51.7182561Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-06-16T01:43:51.7182918Z env:
+2026-06-16T01:43:51.7183100Z   CARGO_TERM_COLOR: always
+2026-06-16T01:43:51.7183351Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-06-16T01:43:51.7183609Z   CARGO_INCREMENTAL: 0
+2026-06-16T01:43:51.7184096Z   CACHE_ON_FAILURE: false
+2026-06-16T01:43:51.7184312Z ##[endgroup]
+2026-06-16T01:44:03.9065829Z [1m[91merror[0m: failed to parse manifest at `D:\a\open-fetch\open-fetch\Cargo.toml`
+2026-06-16T01:44:03.9098239Z 
+2026-06-16T01:44:03.9098444Z Caused by:
+2026-06-16T01:44:03.9098967Z   feature `server` includes `axum`, but `axum` is not an optional dependency
+2026-06-16T01:44:03.9102909Z   A non-optional dependency of the same name is defined; consider adding `optional = true` to its definition.
+2026-06-16T01:44:04.3967777Z ##[error]Process completed with exit code 1.
