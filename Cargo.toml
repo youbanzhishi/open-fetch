@@ -16,6 +16,7 @@ anyhow = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 
@@ -26,7 +27,6 @@ tower = { version = "0.4", optional = true }
 tower-http = { version = "0.5", features = ["cors", "fs"], optional = true }
 futures-util = { version = "0.3", optional = true }
 thiserror = { version = "1", optional = true }
-tracing-subscriber = { version = "0.3", features = ["env-filter"], optional = true }
 
 [dev-dependencies]
 tempfile = "3"
@@ -34,7 +34,7 @@ tempfile = "3"
 [features]
 default = ["cli"]
 cli = []
-cloud = ["axum", "tokio", "tower", "tower-http", "futures-util", "thiserror", "tracing-subscriber"]
+cloud = ["axum", "tokio", "tower", "tower-http", "futures-util", "thiserror"]
 
 [[bin]]
 name = "open-fetch"

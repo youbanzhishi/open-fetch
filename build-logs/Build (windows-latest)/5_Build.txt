@@ -1,15 +1,120 @@
-﻿2026-06-16T01:43:51.6945549Z ##[group]Run cargo build --release
-2026-06-16T01:43:51.6945930Z [36;1mcargo build --release[0m
-2026-06-16T01:43:51.7182561Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
-2026-06-16T01:43:51.7182918Z env:
-2026-06-16T01:43:51.7183100Z   CARGO_TERM_COLOR: always
-2026-06-16T01:43:51.7183351Z   CARGO_HOME: C:\Users\runneradmin\.cargo
-2026-06-16T01:43:51.7183609Z   CARGO_INCREMENTAL: 0
-2026-06-16T01:43:51.7184096Z   CACHE_ON_FAILURE: false
-2026-06-16T01:43:51.7184312Z ##[endgroup]
-2026-06-16T01:44:03.9065829Z [1m[91merror[0m: failed to parse manifest at `D:\a\open-fetch\open-fetch\Cargo.toml`
-2026-06-16T01:44:03.9098239Z 
-2026-06-16T01:44:03.9098444Z Caused by:
-2026-06-16T01:44:03.9098967Z   feature `server` includes `axum`, but `axum` is not an optional dependency
-2026-06-16T01:44:03.9102909Z   A non-optional dependency of the same name is defined; consider adding `optional = true` to its definition.
-2026-06-16T01:44:04.3967777Z ##[error]Process completed with exit code 1.
+﻿2026-06-16T01:46:18.0208944Z ##[group]Run cargo build --release
+2026-06-16T01:46:18.0209355Z [36;1mcargo build --release[0m
+2026-06-16T01:46:18.0312340Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-06-16T01:46:18.0312699Z env:
+2026-06-16T01:46:18.0312890Z   CARGO_TERM_COLOR: always
+2026-06-16T01:46:18.0313146Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-06-16T01:46:18.0313409Z   CARGO_INCREMENTAL: 0
+2026-06-16T01:46:18.0313618Z   CACHE_ON_FAILURE: false
+2026-06-16T01:46:18.0313821Z ##[endgroup]
+2026-06-16T01:46:33.4482069Z [1m[92m    Updating[0m crates.io index
+2026-06-16T01:46:34.1988569Z [1m[92m     Locking[0m 4 packages to latest compatible versions
+2026-06-16T01:46:34.2026884Z [1m[92m      Adding[0m http-range-header v0.4.2
+2026-06-16T01:46:34.2028169Z [1m[92m      Adding[0m mime_guess v2.0.5
+2026-06-16T01:46:34.2030815Z [1m[92m      Adding[0m tower v0.4.13 [1m[93m(available: v0.5.3)[0m
+2026-06-16T01:46:34.2031568Z [1m[92m      Adding[0m unicase v2.9.0
+2026-06-16T01:46:36.1539137Z [1m[92m   Compiling[0m proc-macro2 v1.0.106
+2026-06-16T01:46:36.1578969Z [1m[92m   Compiling[0m unicode-ident v1.0.24
+2026-06-16T01:46:36.1580847Z [1m[92m   Compiling[0m quote v1.0.45
+2026-06-16T01:46:36.1581404Z [1m[92m   Compiling[0m windows-link v0.2.1
+2026-06-16T01:46:39.8958056Z [1m[92m   Compiling[0m serde_core v1.0.228
+2026-06-16T01:46:42.6382633Z [1m[92m   Compiling[0m windows-sys v0.61.2
+2026-06-16T01:46:44.1925161Z [1m[92m   Compiling[0m autocfg v1.5.1
+2026-06-16T01:46:44.4325703Z [1m[92m   Compiling[0m utf8parse v0.2.2
+2026-06-16T01:46:44.6163263Z [1m[92m   Compiling[0m once_cell_polyfill v1.70.2
+2026-06-16T01:46:44.8157421Z [1m[92m   Compiling[0m anstyle v1.0.14
+2026-06-16T01:46:45.2860934Z [1m[92m   Compiling[0m anstyle-wincon v3.0.11
+2026-06-16T01:46:45.7251861Z [1m[92m   Compiling[0m num-traits v0.2.19
+2026-06-16T01:46:45.8152602Z [1m[92m   Compiling[0m anstyle-parse v1.0.0
+2026-06-16T01:46:46.0776515Z [1m[92m   Compiling[0m anstyle-query v1.1.5
+2026-06-16T01:46:46.2441771Z [1m[92m   Compiling[0m syn v2.0.117
+2026-06-16T01:46:46.3430317Z [1m[92m   Compiling[0m is_terminal_polyfill v1.70.2
+2026-06-16T01:46:46.3963117Z [1m[92m   Compiling[0m serde v1.0.228
+2026-06-16T01:46:46.4196901Z [1m[92m   Compiling[0m colorchoice v1.0.5
+2026-06-16T01:46:46.5185079Z [1m[92m   Compiling[0m getrandom v0.4.2
+2026-06-16T01:46:46.7748012Z [1m[92m   Compiling[0m zmij v1.0.21
+2026-06-16T01:46:46.9515583Z [1m[92m   Compiling[0m anstream v1.0.0
+2026-06-16T01:46:47.4866756Z [1m[92m   Compiling[0m clap_lex v1.1.0
+2026-06-16T01:46:47.6944003Z [1m[92m   Compiling[0m strsim v0.11.1
+2026-06-16T01:46:47.9661239Z [1m[92m   Compiling[0m heck v0.5.0
+2026-06-16T01:46:48.2643107Z [1m[92m   Compiling[0m anyhow v1.0.102
+2026-06-16T01:46:48.6469181Z [1m[92m   Compiling[0m once_cell v1.21.4
+2026-06-16T01:46:48.7257813Z [1m[92m   Compiling[0m cfg-if v1.0.4
+2026-06-16T01:46:48.7773102Z [1m[92m   Compiling[0m serde_json v1.0.150
+2026-06-16T01:46:48.9239307Z [1m[92m   Compiling[0m tracing-core v0.1.36
+2026-06-16T01:46:49.0120823Z [1m[92m   Compiling[0m clap_builder v4.6.0
+2026-06-16T01:46:50.3391887Z [1m[92m   Compiling[0m pin-project-lite v0.2.17
+2026-06-16T01:46:50.4201981Z [1m[92m   Compiling[0m itoa v1.0.18
+2026-06-16T01:46:50.6906792Z [1m[92m   Compiling[0m memchr v2.8.1
+2026-06-16T01:46:52.3371573Z [1m[92m   Compiling[0m uuid v1.23.2
+2026-06-16T01:46:53.8700793Z [1m[92m   Compiling[0m serde_derive v1.0.228
+2026-06-16T01:46:53.8701519Z [1m[92m   Compiling[0m clap_derive v4.6.1
+2026-06-16T01:46:55.0654204Z [1m[92m   Compiling[0m tracing-attributes v0.1.31
+2026-06-16T01:46:56.9551564Z [1m[92m   Compiling[0m clap v4.6.1
+2026-06-16T01:46:57.0749101Z [1m[92m   Compiling[0m tracing v0.1.44
+2026-06-16T01:46:58.6021825Z [1m[92m   Compiling[0m chrono v0.4.45
+2026-06-16T01:47:00.0736674Z [1m[92m   Compiling[0m open-fetch v0.9.2 (D:\a\open-fetch\open-fetch)
+2026-06-16T01:47:01.9104656Z [1m[91merror[E0433][0m[1m[97m: cannot find module or crate `tracing_subscriber` in this scope[0m
+2026-06-16T01:47:01.9105595Z  [1m[96m--> [0msrc\main.rs:8:5
+2026-06-16T01:47:01.9106024Z   [1m[96m|[0m
+2026-06-16T01:47:01.9113071Z [1m[96m8[0m [1m[96m|[0m use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+2026-06-16T01:47:01.9114402Z   [1m[96m|[0m     [1m[91m^^^^^^^^^^^^^^^^^^[0m [1m[91muse of unresolved module or unlinked crate `tracing_subscriber`[0m
+2026-06-16T01:47:01.9115460Z   [1m[96m|[0m
+2026-06-16T01:47:01.9116522Z   [1m[96m= [0m[1m[97mhelp[0m: if you wanted to use a crate named `tracing_subscriber`, use `cargo add tracing_subscriber` to add it to your `Cargo.toml`
+2026-06-16T01:47:01.9117818Z 
+2026-06-16T01:47:01.9943930Z [1m[91merror[E0433][0m[1m[97m: cannot find module or crate `tracing_subscriber` in this scope[0m
+2026-06-16T01:47:01.9944593Z   [1m[96m--> [0msrc\main.rs:60:15
+2026-06-16T01:47:01.9944892Z    [1m[96m|[0m
+2026-06-16T01:47:01.9945461Z [1m[96m60[0m [1m[96m|[0m         .with(tracing_subscriber::fmt::layer())
+2026-06-16T01:47:01.9946140Z    [1m[96m|[0m               [1m[91m^^^^^^^^^^^^^^^^^^[0m [1m[91muse of unresolved module or unlinked crate `tracing_subscriber`[0m
+2026-06-16T01:47:01.9946619Z    [1m[96m|[0m
+2026-06-16T01:47:01.9947243Z    [1m[96m= [0m[1m[97mhelp[0m: if you wanted to use a crate named `tracing_subscriber`, use `cargo add tracing_subscriber` to add it to your `Cargo.toml`
+2026-06-16T01:47:01.9947741Z 
+2026-06-16T01:47:02.0065717Z [1m[91merror[E0433][0m[1m[97m: cannot find module or crate `tracing_subscriber` in this scope[0m
+2026-06-16T01:47:02.0066469Z   [1m[96m--> [0msrc\main.rs:61:15
+2026-06-16T01:47:02.0066748Z    [1m[96m|[0m
+2026-06-16T01:47:02.0067305Z [1m[96m61[0m [1m[96m|[0m         .with(tracing_subscriber::EnvFilter::from_default_env()
+2026-06-16T01:47:02.0067997Z    [1m[96m|[0m               [1m[91m^^^^^^^^^^^^^^^^^^[0m [1m[91muse of unresolved module or unlinked crate `tracing_subscriber`[0m
+2026-06-16T01:47:02.0068484Z    [1m[96m|[0m
+2026-06-16T01:47:02.0069096Z    [1m[96m= [0m[1m[97mhelp[0m: if you wanted to use a crate named `tracing_subscriber`, use `cargo add tracing_subscriber` to add it to your `Cargo.toml`
+2026-06-16T01:47:02.0069606Z 
+2026-06-16T01:47:02.0185099Z [1m[93mwarning[0m[1m[97m: unused import: `std::process::Command`[0m
+2026-06-16T01:47:02.0185918Z  [1m[96m--> [0msrc\cli\download.rs:3:5
+2026-06-16T01:47:02.0186389Z   [1m[96m|[0m
+2026-06-16T01:47:02.0186911Z [1m[96m3[0m [1m[96m|[0m use std::process::Command;
+2026-06-16T01:47:02.0187526Z   [1m[96m|[0m     [1m[93m^^^^^^^^^^^^^^^^^^^^^[0m
+2026-06-16T01:47:02.0188007Z   [1m[96m|[0m
+2026-06-16T01:47:02.0188696Z   [1m[96m= [0m[1m[97mnote[0m: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+2026-06-16T01:47:02.0189276Z 
+2026-06-16T01:47:02.0457967Z [1m[91merror[E0433][0m[1m[97m: cannot find module or crate `tracing_subscriber` in this scope[0m
+2026-06-16T01:47:02.0458636Z   [1m[96m--> [0msrc\main.rs:59:5
+2026-06-16T01:47:02.0458914Z    [1m[96m|[0m
+2026-06-16T01:47:02.0459442Z [1m[96m59[0m [1m[96m|[0m     tracing_subscriber::registry()
+2026-06-16T01:47:02.0460073Z    [1m[96m|[0m     [1m[91m^^^^^^^^^^^^^^^^^^[0m [1m[91muse of unresolved module or unlinked crate `tracing_subscriber`[0m
+2026-06-16T01:47:02.0460545Z    [1m[96m|[0m
+2026-06-16T01:47:02.0461166Z    [1m[96m= [0m[1m[97mhelp[0m: if you wanted to use a crate named `tracing_subscriber`, use `cargo add tracing_subscriber` to add it to your `Cargo.toml`
+2026-06-16T01:47:02.0461674Z 
+2026-06-16T01:47:02.1369316Z [1m[91merror[E0061][0m[1m[97m: this function takes 3 arguments but 5 arguments were supplied[0m
+2026-06-16T01:47:02.1370142Z   [1m[96m--> [0msrc\main.rs:80:13
+2026-06-16T01:47:02.1370429Z    [1m[96m|[0m
+2026-06-16T01:47:02.1371160Z [1m[96m80[0m [1m[96m|[0m             cli::download::run_download(&url, extractor.as_deref(), &quality, &format, output.as_deref())?;
+2026-06-16T01:47:02.1373259Z    [1m[96m|[0m             [1m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m                                       [1m[96m-------[0m  [1m[96m-----------------[0m [1m[96munexpected argument #5 of type `Option<&str>`[0m
+2026-06-16T01:47:02.1373997Z    [1m[96m|[0m                                                                               [1m[96m|[0m
+2026-06-16T01:47:02.1374711Z    [1m[96m|[0m                                                                               [1m[96munexpected argument #4 of type `&std::string::String`[0m
+2026-06-16T01:47:02.1375640Z    [1m[96m|[0m
+2026-06-16T01:47:02.1375902Z [1m[92mnote[0m: function defined here
+2026-06-16T01:47:02.1376226Z   [1m[96m--> [0msrc\cli\download.rs:5:8
+2026-06-16T01:47:02.1376505Z    [1m[96m|[0m
+2026-06-16T01:47:02.1377110Z [1m[96m 5[0m [1m[96m|[0m pub fn run_download(url: &str, extractor: Option<&str>, quality: &str) -> anyhow::Result<()> {
+2026-06-16T01:47:02.1377712Z    [1m[96m|[0m        [1m[92m^^^^^^^^^^^^[0m
+2026-06-16T01:47:02.1378057Z [1m[96mhelp[0m: remove the extra arguments
+2026-06-16T01:47:02.1378347Z    [1m[96m|[0m
+2026-06-16T01:47:02.1378944Z [1m[96m80[0m [91m- [0m            cli::download::run_download(&url, extractor.as_deref(), &quality[91m, &format, output.as_deref()[0m)?;
+2026-06-16T01:47:02.1379724Z [1m[96m80[0m [92m+ [0m            cli::download::run_download(&url, extractor.as_deref(), &quality)?;
+2026-06-16T01:47:02.1380261Z    [1m[96m|[0m
+2026-06-16T01:47:02.1380482Z 
+2026-06-16T01:47:02.1688044Z [1m[97mSome errors have detailed explanations: E0061, E0433.[0m
+2026-06-16T01:47:02.1689026Z [1m[97mFor more information about an error, try `rustc --explain E0061`.[0m
+2026-06-16T01:47:02.1834963Z [1m[93mwarning[0m: `open-fetch` (bin "open-fetch") generated 1 warning
+2026-06-16T01:47:02.1836603Z [1m[91merror[0m: could not compile `open-fetch` (bin "open-fetch") due to 5 previous errors; 1 warning emitted
+2026-06-16T01:47:02.5057314Z ##[error]Process completed with exit code 1.
