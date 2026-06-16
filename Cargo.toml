@@ -28,6 +28,10 @@ tower-http = { version = "0.5", features = ["cors", "fs"], optional = true }
 futures-util = { version = "0.3", optional = true }
 thiserror = { version = "1", optional = true }
 
+# GUI (可选)
+egui = { version = "0.28", optional = true }
+eframe = { version = "0.28", optional = true }
+
 [dev-dependencies]
 tempfile = "3"
 
@@ -35,11 +39,17 @@ tempfile = "3"
 default = ["cli"]
 cli = []
 cloud = ["axum", "tokio", "tower", "tower-http", "futures-util", "thiserror"]
+gui = ["egui", "eframe"]
 
 [[bin]]
 name = "open-fetch"
 path = "src/main.rs"
 required-features = ["cli"]
+
+[[bin]]
+name = "open-fetch-gui"
+path = "src/gui_main.rs"
+required-features = ["gui"]
 
 [profile.release]
 opt-level = 3

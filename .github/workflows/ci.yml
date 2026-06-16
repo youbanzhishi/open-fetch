@@ -10,9 +10,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  # ============ 跨平台编译 ============
-  build-all:
-    name: Build (${{ matrix.os }})
+  # ============ 跨平台 CLI 编译 ============
+  build-cli:
+    name: Build CLI (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -29,32 +29,96 @@ jobs:
         with:
           workspaces: target
       
-      - name: Build
+      - name: Build CLI
         run: |
           cargo build --release
           
-      - name: Package
+      - name: Package CLI
         shell: bash
         run: |
-          mkdir -p dist
+          mkdir -p dist-cli
           # Windows .exe
           if [ -f "target/release/open-fetch.exe" ]; then
-            cp "target/release/open-fetch.exe" dist/
+            cp "target/release/open-fetch.exe" dist-cli/
+            cd dist-cli && powershell -Command "Compress-Archive -Force open-fetch.exe open-fetch-cli-windows.zip" && cd ..
           fi
           # Unix binary
           if [ -f "target/release/open-fetch" ]; then
-            cp "target/release/open-fetch" dist/
+            cp "target/release/open-fetch" dist-cli/
+            cd dist-cli && sh -c "zip open-fetch-cli-linux.zip open-fetch" 2>/dev/null || tar czf open-fetch-cli-linux.tar.gz open-fetch && cd ..
           fi
-          echo "=== Artifacts ==="
-          ls -lh dist/
-          if [ -z "$(ls -A dist/)" ]; then
-            echo "ERROR: No artifacts found"
+          echo "=== CLI Artifacts ==="
+          ls -lh dist-cli/
+          if [ -z "$(ls -A dist-cli/)" ]; then
+            echo "ERROR: No CLI artifacts found"
             exit 1
           fi
           
-      - name: Upload artifact
+      - name: Upload CLI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: open-fetch-${{ matrix.os }}
-          path: dist/
+          name: open-fetch-cli-${{ matrix.os }}
+          path: dist-cli/
+          retention-days: 7
+
+  # ============ 跨平台 GUI 编译 ============
+  build-gui:
+    name: Build GUI (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: target
+      
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libgl1-mesa-dev libasound2-dev
+      
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install gtk+3 adwaita-icon-theme
+      
+      - name: Build GUI
+        run: |
+          cargo build --release --features gui
+          
+      - name: Package GUI
+        shell: bash
+        run: |
+          mkdir -p dist-gui
+          # Windows .exe
+          if [ -f "target/release/open-fetch-gui.exe" ]; then
+            cp "target/release/open-fetch-gui.exe" dist-gui/
+            cd dist-gui && powershell -Command "Compress-Archive -Force open-fetch-gui.exe open-fetch-gui-windows.zip" && cd ..
+          fi
+          # Unix binary
+          if [ -f "target/release/open-fetch-gui" ]; then
+            cp "target/release/open-fetch-gui" dist-gui/
+            cd dist-gui && sh -c "zip open-fetch-gui-linux.zip open-fetch-gui" 2>/dev/null || tar czf open-fetch-gui-linux.tar.gz open-fetch-gui && cd ..
+          fi
+          echo "=== GUI Artifacts ==="
+          ls -lh dist-gui/
+          if [ -z "$(ls -A dist-gui/)" ]; then
+            echo "ERROR: No GUI artifacts found"
+            exit 1
+          fi
+          
+      - name: Upload GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-fetch-gui-${{ matrix.os }}
+          path: dist-gui/
           retention-days: 7
