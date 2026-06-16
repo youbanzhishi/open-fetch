@@ -1,65 +1,65 @@
-﻿2026-06-16T01:46:04.8309515Z ##[group]Run Swatinem/rust-cache@v2
-2026-06-16T01:46:04.8310277Z with:
-2026-06-16T01:46:04.8310797Z   workspaces: target
-2026-06-16T01:46:04.8311382Z   prefix-key: v0-rust
-2026-06-16T01:46:04.8312151Z   add-job-id-key: true
-2026-06-16T01:46:04.8312801Z   add-rust-environment-hash-key: true
-2026-06-16T01:46:04.8313504Z   cache-targets: true
-2026-06-16T01:46:04.8314082Z   cache-all-crates: false
-2026-06-16T01:46:04.8314714Z   cache-workspace-crates: false
-2026-06-16T01:46:04.8315359Z   save-if: true
-2026-06-16T01:46:04.8315907Z   cache-provider: github
-2026-06-16T01:46:04.8316500Z   cache-bin: true
-2026-06-16T01:46:04.8317039Z   lookup-only: false
-2026-06-16T01:46:04.8317587Z   cmd-format: {0}
-2026-06-16T01:46:04.8318102Z env:
-2026-06-16T01:46:04.8318632Z   CARGO_TERM_COLOR: always
-2026-06-16T01:46:04.8319271Z   CARGO_HOME: /home/runner/.cargo
-2026-06-16T01:46:04.8319938Z   CARGO_INCREMENTAL: 0
-2026-06-16T01:46:04.8320500Z ##[endgroup]
-2026-06-16T01:46:05.1266619Z (node:2367) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-2026-06-16T01:46:05.1269285Z (Use `node --trace-deprecation ...` to show where the warning was created)
-2026-06-16T01:46:05.2100255Z Error: The cwd: /home/runner/work/open-fetch/open-fetch/target does not exist!
-2026-06-16T01:46:05.2104026Z     at ToolRunner.<anonymous> (/home/runner/work/_actions/Swatinem/rust-cache/v2/dist/restore/index.js:202637:35)
-2026-06-16T01:46:05.2106850Z     at Generator.next (<anonymous>)
-2026-06-16T01:46:05.2109250Z     at fulfilled (/home/runner/work/_actions/Swatinem/rust-cache/v2/dist/restore/index.js:202259:58) {
-2026-06-16T01:46:05.2112131Z   commandFailed: {
-2026-06-16T01:46:05.2113919Z     command: 'cargo metadata --all-features --format-version 1 --no-deps',
-2026-06-16T01:46:05.2115988Z     stderr: ''
-2026-06-16T01:46:05.2116998Z   }
-2026-06-16T01:46:05.2117856Z }
-2026-06-16T01:46:05.2119739Z ##[group]Cache Configuration
-2026-06-16T01:46:05.2121336Z Cache Provider:
-2026-06-16T01:46:05.2122786Z     github
-2026-06-16T01:46:05.2123959Z Workspaces:
-2026-06-16T01:46:05.2125387Z     /home/runner/work/open-fetch/open-fetch/target
-2026-06-16T01:46:05.2127298Z Cache Paths:
-2026-06-16T01:46:05.2128595Z     /home/runner/.cargo/bin
-2026-06-16T01:46:05.2130172Z     /home/runner/.cargo/.crates.toml
-2026-06-16T01:46:05.2132232Z     /home/runner/.cargo/.crates2.json
-2026-06-16T01:46:05.2134110Z     /home/runner/.cargo/registry
-2026-06-16T01:46:05.2135870Z     /home/runner/.cargo/git
-2026-06-16T01:46:05.2137844Z     /home/runner/work/open-fetch/open-fetch/target/target
-2026-06-16T01:46:05.2140107Z Restore Key:
-2026-06-16T01:46:05.2141528Z     v0-rust-build-all-Linux-x64-4107bf91
-2026-06-16T01:46:05.2143534Z Cache Key:
-2026-06-16T01:46:05.2144989Z     v0-rust-build-all-Linux-x64-4107bf91-da39a3ee
-2026-06-16T01:46:05.2146940Z .. Prefix:
-2026-06-16T01:46:05.2148204Z   - v0-rust-build-all-Linux-x64
-2026-06-16T01:46:05.2149713Z .. Environment considered:
-2026-06-16T01:46:05.2151181Z   - Rust Versions:
-2026-06-16T01:46:05.2153342Z     - 1.96.0 x86_64-unknown-linux-gnu ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96
-2026-06-16T01:46:05.2156396Z     - 1.96.0 x86_64-unknown-linux-gnu ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96
-2026-06-16T01:46:05.2158951Z   - CARGO_HOME
-2026-06-16T01:46:05.2160014Z   - CARGO_INCREMENTAL
-2026-06-16T01:46:05.2160949Z   - CARGO_TERM_COLOR
-2026-06-16T01:46:05.2162100Z .. Lockfiles considered:
-2026-06-16T01:46:05.2163784Z ##[endgroup]
-2026-06-16T01:46:05.2164260Z 
-2026-06-16T01:46:05.2164637Z ... Restoring cache ...
-2026-06-16T01:46:05.3223209Z Cache hit for: v0-rust-build-all-Linux-x64-4107bf91-da39a3ee
-2026-06-16T01:46:05.5637235Z Received 28490291 of 28490291 (100.0%), 127.0 MBs/sec
-2026-06-16T01:46:05.5639393Z Cache Size: ~27 MB (28490291 B)
-2026-06-16T01:46:05.5683330Z [command]/usr/bin/tar -xf /home/runner/work/_temp/07e5e20d-7594-46b3-86d4-f25b22794ecd/cache.tzst -P -C /home/runner/work/open-fetch/open-fetch --use-compress-program unzstd
-2026-06-16T01:46:05.9786168Z Cache restored successfully
-2026-06-16T01:46:05.9805451Z Restored from cache key "v0-rust-build-all-Linux-x64-4107bf91-da39a3ee" full match: true.
+﻿2026-06-16T01:48:42.5518049Z ##[group]Run Swatinem/rust-cache@v2
+2026-06-16T01:48:42.5519101Z with:
+2026-06-16T01:48:42.5519909Z   workspaces: target
+2026-06-16T01:48:42.5520801Z   prefix-key: v0-rust
+2026-06-16T01:48:42.5521691Z   add-job-id-key: true
+2026-06-16T01:48:42.5522652Z   add-rust-environment-hash-key: true
+2026-06-16T01:48:42.5523711Z   cache-targets: true
+2026-06-16T01:48:42.5524758Z   cache-all-crates: false
+2026-06-16T01:48:42.5525743Z   cache-workspace-crates: false
+2026-06-16T01:48:42.5526730Z   save-if: true
+2026-06-16T01:48:42.5527585Z   cache-provider: github
+2026-06-16T01:48:42.5528500Z   cache-bin: true
+2026-06-16T01:48:42.5529339Z   lookup-only: false
+2026-06-16T01:48:42.5530210Z   cmd-format: {0}
+2026-06-16T01:48:42.5531108Z env:
+2026-06-16T01:48:42.5531922Z   CARGO_TERM_COLOR: always
+2026-06-16T01:48:42.5532878Z   CARGO_HOME: /home/runner/.cargo
+2026-06-16T01:48:42.5533897Z   CARGO_INCREMENTAL: 0
+2026-06-16T01:48:42.5534940Z ##[endgroup]
+2026-06-16T01:48:42.8254448Z (node:2324) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-16T01:48:42.8257551Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-16T01:48:42.9052383Z Error: The cwd: /home/runner/work/open-fetch/open-fetch/target does not exist!
+2026-06-16T01:48:42.9057461Z     at ToolRunner.<anonymous> (/home/runner/work/_actions/Swatinem/rust-cache/v2/dist/restore/index.js:202637:35)
+2026-06-16T01:48:42.9060535Z     at Generator.next (<anonymous>)
+2026-06-16T01:48:42.9063313Z ##[group]Cache Configuration
+2026-06-16T01:48:42.9065301Z Cache Provider:
+2026-06-16T01:48:42.9071350Z     at fulfilled (/home/runner/work/_actions/Swatinem/rust-cache/v2/dist/restore/index.js:202259:58) {
+2026-06-16T01:48:42.9074132Z     github
+2026-06-16T01:48:42.9076200Z   commandFailed: {
+2026-06-16T01:48:42.9077495Z Workspaces:
+2026-06-16T01:48:42.9079846Z     command: 'cargo metadata --all-features --format-version 1 --no-deps',
+2026-06-16T01:48:42.9082326Z     /home/runner/work/open-fetch/open-fetch/target
+2026-06-16T01:48:42.9088905Z     stderr: ''
+2026-06-16T01:48:42.9090162Z   }
+2026-06-16T01:48:42.9091272Z }
+2026-06-16T01:48:42.9092352Z Cache Paths:
+2026-06-16T01:48:42.9093560Z     /home/runner/.cargo/bin
+2026-06-16T01:48:42.9095209Z     /home/runner/.cargo/.crates.toml
+2026-06-16T01:48:42.9096800Z     /home/runner/.cargo/.crates2.json
+2026-06-16T01:48:42.9098287Z     /home/runner/.cargo/registry
+2026-06-16T01:48:42.9099739Z     /home/runner/.cargo/git
+2026-06-16T01:48:42.9101375Z     /home/runner/work/open-fetch/open-fetch/target/target
+2026-06-16T01:48:42.9103152Z Restore Key:
+2026-06-16T01:48:42.9104539Z     v0-rust-build-all-Linux-x64-4107bf91
+2026-06-16T01:48:42.9106056Z Cache Key:
+2026-06-16T01:48:42.9107503Z     v0-rust-build-all-Linux-x64-4107bf91-da39a3ee
+2026-06-16T01:48:42.9108673Z .. Prefix:
+2026-06-16T01:48:42.9109537Z   - v0-rust-build-all-Linux-x64
+2026-06-16T01:48:42.9110560Z .. Environment considered:
+2026-06-16T01:48:42.9111559Z   - Rust Versions:
+2026-06-16T01:48:42.9112819Z     - 1.96.0 x86_64-unknown-linux-gnu ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96
+2026-06-16T01:48:42.9114877Z     - 1.96.0 x86_64-unknown-linux-gnu ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96
+2026-06-16T01:48:42.9116298Z   - CARGO_HOME
+2026-06-16T01:48:42.9117147Z   - CARGO_INCREMENTAL
+2026-06-16T01:48:42.9118035Z   - CARGO_TERM_COLOR
+2026-06-16T01:48:42.9118924Z .. Lockfiles considered:
+2026-06-16T01:48:42.9120430Z ##[endgroup]
+2026-06-16T01:48:42.9120881Z 
+2026-06-16T01:48:42.9121267Z ... Restoring cache ...
+2026-06-16T01:48:42.9758575Z Cache hit for: v0-rust-build-all-Linux-x64-4107bf91-da39a3ee
+2026-06-16T01:48:43.2820632Z Received 28490291 of 28490291 (100.0%), 105.3 MBs/sec
+2026-06-16T01:48:43.2823093Z Cache Size: ~27 MB (28490291 B)
+2026-06-16T01:48:43.2853476Z [command]/usr/bin/tar -xf /home/runner/work/_temp/46ab9570-652e-4027-99f8-81fd4f2bf40d/cache.tzst -P -C /home/runner/work/open-fetch/open-fetch --use-compress-program unzstd
+2026-06-16T01:48:43.4902153Z Cache restored successfully
+2026-06-16T01:48:43.4919307Z Restored from cache key "v0-rust-build-all-Linux-x64-4107bf91-da39a3ee" full match: true.

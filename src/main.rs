@@ -40,14 +40,6 @@ enum Command {
         /// 画质
         #[arg(short, long, default_value = "best")]
         quality: String,
-        
-        /// 输出格式
-        #[arg(short, long, default_value = "mp4")]
-        format: String,
-        
-        /// 输出目录
-        #[arg(short, long)]
-        output: Option<String>,
     },
     
     /// 列出支持的平台
@@ -76,8 +68,8 @@ fn main() -> anyhow::Result<()> {
             });
         }
         
-        Command::Download { url, extractor, quality, format, output } => {
-            cli::download::run_download(&url, extractor.as_deref(), &quality, &format, output.as_deref())?;
+        Command::Download { url, extractor, quality } => {
+            cli::download::run_download(&url, extractor.as_deref(), &quality)?;
         }
         
         Command::List => {
